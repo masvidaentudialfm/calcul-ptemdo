@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Más Vida En Tú Dial FM</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: rgba(25, 25, 35, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #ffcc00;
+        }
+        p {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        .live-badge {
+            display: inline-block;
+            background: #ff4757;
+            color: white;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+        }
+        .status-text {
+            font-size: 0.8rem;
+            color: #ffcc00;
+            margin-bottom: 15px;
+            min-height: 20px;
+        }
+        .play-btn {
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #121212;
+            border: none;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 5px 15px rgba(255, 153, 0, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .volume-control input {
+            width: 70%;
+            accent-color: #ffcc00;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="live-badge">● En Vivo</div>
+        <h1>Más Vida En Tú Dial FM</h1>
+        <p>Tu espacio, tu música</p>
+
+        <!-- Texto de estado para ver qué pasa al reproducir -->
+        <div class="status-text" id="statusText">Toca el botón para escuchar</div>
+
+        <!-- Botón personalizado de Reproducción -->
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+
+        <!-- Elemento de audio actualizado con HTTPS -->
+        <audio id="audioStream" src="https://uk2freenew.listen2myradio.com:33492/;"></audio>
+
+        <!-- Control de volumen -->
+        <div class="volume-control">
+            <span>🔊</span>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audioStream');
+        const playBtn = document.getElementById('playBtn');
+        const statusText = document.getElementById('statusText');
+
+        function togglePlay() {
+            if (audio.paused) {
+                statusText.innerText = "Conectando...";
+                audio.play().then(() => {
+                    playBtn.innerHTML = '❚❚';
+                    statusText.innerText = "Reproduciendo en vivo";
+                }).catch(error => {
+                    console.error("Error:", error);
+                    statusText.innerText = "Bloqueado por el navegador";
+                    playBtn.innerHTML = '▶';
+                });
+            } else {
+                audio.pause();
+                playBtn.innerHTML = '▶';
+                statusText.innerText = "Pausado";
+            }
+        }
+
+        function changeVolume(val) {
+            audio.volume = val;
+        }
+
+        audio.addEventListener('error', function() {
+            statusText.innerText = "Error: Servidor de radio apagado o inaccesible";
+            playBtn.innerHTML = '▶';
+        });
+    </script>
+
+</body>
+</html>
